@@ -21,7 +21,8 @@ export const documentSchema =  new Schema({
         type: String,
     },
 },{
-    timestamps: true
+    timestamps: true,
+    strict: false 
 })
 
 export default model('Document',documentSchema)

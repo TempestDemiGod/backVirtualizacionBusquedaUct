@@ -1,11 +1,11 @@
 import { response } from "express"
-import { addDocument, allGetDocuments, deleteDocument, getOneDocument, pageDocuments, searchPageDocuments, updateDocument } from "../services/document.service.js"
+import { addDocument, allGetDocuments, deleteDocument, getOneDocument, pageDocuments, searchPageDocuments, searchPageDocumentsFolder, updateDocument } from "../services/document.service.js"
 
 export const createDocument = async( req , res ) => {
     try {
-        
+        const file = req.files?.pdf
         const data = req.body
-        const response = await addDocument(data)
+        const response = await addDocument(data , file)
         res.status(response.status).json(response.data)
     } catch (e) {
         console.log(e)
@@ -46,6 +46,27 @@ export const paginacionDocumentos = async( req , res ) => {
     try {
         const {page} = req.params 
         const response = await pageDocuments(page)
+        res.status(response.status).json(response.data)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
+export const paginacionDocumentosFolder = async( req , res ) => {
+    try {
+        const {page} = req.params
+        let filtroFolder = {
+        }
+        const folder = req.params?.folder
+         if(folder == '404'){
+            
+         } else{
+            filtroFolder.
+         folder_name = folder
+         }
+        const response = await searchPageDocumentsFolder(page,filtroFolder)
+        
         res.status(response.status).json(response.data)
     } catch (e) {
         console.log(e)
