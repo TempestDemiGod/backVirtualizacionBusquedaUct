@@ -1,5 +1,7 @@
 import documentModel from "../models/fileDocument.model.js"
 import { deleteDocumentoDrive, uploadPDFToFolder } from "./driveGoogle.service.js"
+import FormData from 'form-data';
+import axios from 'axios';
 
 const retInf = (status, data)=> {
     return {
@@ -13,7 +15,26 @@ export const addDocument = async (data , pdf) => {
         if(!pdf) return retInf(400, 'el documento es obligatorio')
         const documents = await documentModel.find()
         if(documents >= 40) return retInf(201,'alcanzado limite documentos') 
-        const newPDF = await uploadPDFToFolder(data.folder_name , pdf , data.file_name )
+
+            const form = new FormData();
+            form.append('prueba', pdf.data, {
+                filename: pdf.name,
+                contentType: pdf.mimetype
+              });
+            //   console.log('Form Headers:', form.getHeaders());
+        const pdfOCR  = await axios.post(
+            'https://demo1-afr1.onrender.com/convert-to-ocr',
+            form,
+            { headers: form.getHeaders() }
+        );
+        // console.log('pdfo _---------->>', pdf)
+        // console.log('pdfocr  ------>> ', pdfOCR.data)
+        let PDFNuevo = {
+            ...pdf,
+            data: pdfOCR.data.buffer ,
+            size: pdfOCR.data.size_bytes
+        }
+        const newPDF = await uploadPDFToFolder(data.folder_name , PDFNuevo , data.file_name )
         const dataDocument = {
             ...data,
             ...newPDF,
