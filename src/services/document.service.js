@@ -21,14 +21,14 @@ export const addDocument = async (data , pdf) => {
                 filename: pdf.name,
                 contentType: pdf.mimetype
               });
-            //   console.log('Form Headers:', form.getHeaders());
+              console.log('Form Headers:', form.getHeaders());
         const pdfOCR  = await axios.post(
-            'https://demo1-afr1.onrender.com/convert-to-ocr',
+            'http://190.234.242.76:5000/convert-to-ocr',
             form,
             { headers: form.getHeaders() }
         );
-        // console.log('pdfo _---------->>', pdf)
-        // console.log('pdfocr  ------>> ', pdfOCR.data)
+        console.log('pdfo _---------->>', pdf)
+        console.log('pdfocr  ------>> ', pdfOCR)
         let PDFNuevo = {
             ...pdf,
             data: pdfOCR.data.buffer ,
